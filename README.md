@@ -1,7 +1,10 @@
 # Meet - Event Finder Application
 
 ## Overview
+<<<<<<< HEAD
 
+=======
+>>>>>>> ef9f4df4af2cac7e4c2a0a8f9fe1c82085c5340b
 **Meet** is a serverless, progressive web application (PWA) built with React, utilizing a test-driven development (TDD) technique. The app allows users to explore upcoming events, filtering events by city. It also includes offline support, home screen shortcuts, and information visualizations for a better user experience.
 
 ## User Stories & Scenarios
