@@ -5,6 +5,7 @@ import App from '../App';
 
 describe('<App /> component', () => {
     let AppDOM;
+
     beforeEach(() => {
         AppDOM = render(<App />).container.firstChild;
     })
@@ -13,7 +14,11 @@ describe('<App /> component', () => {
         expect(AppDOM.querySelector('#event-list')).toBeInTheDocument();
     });
 
-    test('render CitySearch', () => {
+    test('renders CitySearch', () => {
         expect(AppDOM.querySelector('#city-search')).toBeInTheDocument();
+    });
+
+    test('renders NumberOfEvents', () => {
+        expect(AppDOM.querySelector('#number-of-events')).toBeInTheDocument();
     });
 });
