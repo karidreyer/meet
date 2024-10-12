@@ -2,15 +2,17 @@
 
 import { render } from '@testing-library/react';
 import Event from '../components/Event';
-import mockData from '../mock-data';
+import { getEvents } from '../api';
 import userEvent from "@testing-library/user-event";
 
 describe('<Event /> component', () => {
     let EventComponent;
-    let event = mockData[0]; // Use the first event in the mockData array
+    let event;
     let user;
 
-    beforeEach(() => {
+    beforeEach(async () => {
+        const allEvents = await getEvents(); // Fetch events asynchronously
+        event = allEvents[0]; // Use the first event in the array for testing
         EventComponent = render(<Event event={event}/>);
         user = userEvent.setup(); // Initialize the userEvent to simulate user interactions (eg. clicks, typing)
     });
@@ -47,7 +49,7 @@ describe('<Event /> component', () => {
         const showDetailsButton = EventComponent.getByRole('button', { name: /show details/i }); // "i" flag for case-insensitive search
         await user.click(showDetailsButton);
 
-        const eventDetails = EventComponent.queryByText(event.description);
+        const eventDetails = EventComponent.getByRole('description'); // Use getByRole to assert the presence of the event details, as the details should now be visible in the DOM
         expect(eventDetails).toBeInTheDocument();
     });
 
@@ -59,7 +61,7 @@ describe('<Event /> component', () => {
         const hideDetailsButton = EventComponent.getByRole('button', { name: /hide details/i }); // "i" flag for case-insensitive search
         await user.click(hideDetailsButton);
 
-        const eventDetails = EventComponent.queryByText(event.description);
+        const eventDetails = EventComponent.queryByText(event.description); // Use queryByText to check that event details are no longer in the DOM, as it allows for null values when the element is not found
         expect(eventDetails).not.toBeInTheDocument();
     });
  });
