@@ -2,12 +2,41 @@
 
 import mockData from './mock-data';
 
+// Fetch the list of all events
+export const getEvents = async () => {
+    if (window.location.href.startsWith('http://localhost')) {
+        return mockData;
+      }
+    const token = await getAccessToken();
+
+    if (token) {
+        removeQuery();
+        const url = "https://fvav82i0li.execute-api.eu-central-1.amazonaws.com/dev/api/get-events" + "/" + token;
+        const response = await fetch(url);
+        const result = await response.json();
+        if (result) {
+            return result.events;
+        } else return null;
+    }
+};
+
+// Take the event array, and use map to create a new array with only locations
+export const extractLocations = (events) => {
+    const extractedLocations = events.map((event) => event.location);
+    const locations = [...new Set(extractedLocations)]; // remove duplicate locations by creating another new array using the spread operator and spreading a Set
+    return locations;
+};
+
 // Function to get the access token from the URL
-const getToken = async (code) => {
+   const getToken = async (code) => {
     try {
       const encodeCode = encodeURIComponent(code);
    
-      const response = await fetch( "https://fvav82i0li.execute-api.eu-central-1.amazonaws.com/dev/api/token" + "/" + encodeCode);
+      const url = "https://fvav82i0li.execute-api.eu-central-1.amazonaws.com/dev/api/token";
+      // eslint-disable-next-line no-useless-concat
+  
+      const getUrl = `${url}` + "/" + `${encodeCode}`;
+      const response = await fetch(getUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -15,9 +44,9 @@ const getToken = async (code) => {
       access_token && localStorage.setItem("access_token", access_token);
       return access_token;
     } catch (error) {
-      error.json();
+      return error;
     }
-   }
+  }; 
 
 // Function to check the access token
 const checkToken = async (accessToken) => {
@@ -44,50 +73,24 @@ const removeQuery = () => {
     }
   };
 
-// Fetch the list of all events
-export const getEvents = async () => {
-    if (window.location.href.startsWith('http://localhost')) {
-        return mockData;
-      }
-
-    const token = await getAccessToken();
-
-    if (token) {
-        removeQuery();
-        const url = "https://fvav82i0li.execute-api.eu-central-1.amazonaws.com/dev/api/get-events" + "/" + token;
-        const response = await fetch(url);
-        const result = await response.json();
-        if (result) {
-            return result.events;
-        } else return null;
-    }
-};
-
-// Take the event array, and use map to create a new array with only locations
-export const extractLocations = (events) => {
-    const extractedLocations = events.map((event) => event.location);
-    const locations = [...new Set(extractedLocations)]; // remove duplicate locations by creating another new array using the spread operator and spreading a Set
-    return locations;
-};
-
 // Retrieve the access token from localStorage
-export const getAccessToken = async () => {
-    const accessToken = localStorage.getItem('access_token');
+export const getAccessToken = async () => {             
+    const accessToken = localStorage.getItem("access_token");
     const tokenCheck = accessToken && (await checkToken(accessToken));
-
+  
     if (!accessToken || tokenCheck.error) {
-        await localStorage.removeItem('access_token');
-        const searchParams = new URLSearchParams(window.location.search);
-        const code = await searchParams.get('code');
-        if (!code) {
-            const response = await fetch(
-                "https://fvav82i0li.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url"
-            );
-            const result = await response.json();
-            const { authURL } = result;
-            return (window.location.href = authURL);
-        }
-        return code && getAccessToken(code);
+      await localStorage.removeItem("access_token");
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = await searchParams.get("code");
+      if (!code) {
+        const response = await fetch(
+          "https://fvav82i0li.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url"
+        );
+        const result = await response.json();
+        const { authUrl } = result;
+        return (window.location.href = authUrl);
+      }
+      return code && getToken(code);
     }
     return accessToken;
-};
+  };
