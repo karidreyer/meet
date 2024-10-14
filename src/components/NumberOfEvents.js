@@ -1,19 +1,14 @@
 // src/components/NumberOfEvents.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const NumberOfEvents = ({ numberOfEvents = 32, setNumberOfEvents }) => {
-    const [inputValue, setInputValue] = useState(numberOfEvents);
+const NumberOfEvents = ({ }) => {
+    
+    const [number, setNumber] = useState(32);
 
-    // Update inputValue when numberOfEvents changes
-    useEffect(() => {
-        setInputValue(numberOfEvents);
-    }, [numberOfEvents]); 
-
-    const handleInputChange = (e) => {
-        const value = e.target.value;
-        setInputValue(value); // Update local inputValue state
-        setNumberOfEvents(value); // Pass the new value back to App component
+    const handleInputChanged = (event) => {
+        const value = event.target.value;
+        setNumber(value); // Update local setNumber state
     };
 
     return (
@@ -22,8 +17,9 @@ const NumberOfEvents = ({ numberOfEvents = 32, setNumberOfEvents }) => {
             <input
                 type="number"
                 id="number-of-events-input"
-                value={inputValue} // Controlled by local inputValue state
-                onChange={handleInputChange} // Updates inputValue and parent state on change
+                className="number-of-events-input"
+                value={number} // Controlled by local setNumber state
+                onChange={handleInputChanged} // Updates number and parent state on change
             />
         </div>
     );
