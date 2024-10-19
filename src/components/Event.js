@@ -6,7 +6,7 @@ const Event = ({ event }) => { // Receive the event prop from the parent compone
     const [showDetails, setShowDetails] = useState(false); // Initialize the showDetails state variable to false
     
     return (
-        <li className="Event">
+        <li className="event">
             <h1>{event.summary}</h1>
             <p>{event.created}</p>
             <p>{event.location}</p>
