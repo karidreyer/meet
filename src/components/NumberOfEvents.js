@@ -1,14 +1,20 @@
 // src/components/NumberOfEvents.js
-
 import React, { useState } from 'react';
 
-const NumberOfEvents = ({ }) => {
+const NumberOfEvents = ({ currentNOE, setCurrentNOE, setErrorMessage }) => {
+    const [number, setNumber] = useState(currentNOE);
     
-    const [number, setNumber] = useState(32);
-
     const handleInputChanged = (event) => {
-        const value = event.target.value;
-        setNumber(value); // Update local setNumber state
+        const value = parseInt(event.target.value, 10); // Parse input value as an integer
+        setNumber(value); // Update local state with new value
+
+        // Check if value is a number greater than 0
+        if (isNaN(value) || value <= 0) { 
+            setErrorMessage('Please enter a valid number greater than 0.');
+        } else {
+            setErrorMessage('');
+            setCurrentNOE(value); // Update parent state with new value
+        }
     };
 
     return (
@@ -18,7 +24,7 @@ const NumberOfEvents = ({ }) => {
                 type="number"
                 id="number-of-events-input"
                 className="number-of-events-input"
-                value={number} // Controlled by local setNumber state
+                value={number} // Set input value to local state
                 onChange={handleInputChanged} // Updates number and parent state on change
             />
         </div>
