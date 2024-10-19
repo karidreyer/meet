@@ -57,7 +57,7 @@ describe('<App /> integration', () => {
         const numberOfEventsInput = within(numberOfEventsDOM).queryByRole('spinbutton');
 
         // Clear the input value (remove default "32") and type in "10"
-        await user.type(numberOfEventsInput, "{backspace}{backspace}10");
+        await user.type(numberOfEventsInput, '{backspace}{backspace}10');
 
         // Fetch the events and check the rendered list matches the selected number (10)
         const EventListDOM = AppDOM.querySelector('#event-list');
