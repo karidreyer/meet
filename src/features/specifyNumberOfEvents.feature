@@ -8,4 +8,3 @@ Feature: Specify Number of Events
         Given the main page is open
         When the user selects the option to show a specific number of events
         Then the page should display that number of events
-        And any additional events should be accessible through pagination or scrolling
