@@ -19,15 +19,20 @@ function App() {
   useEffect(() => {
     fetchData(); // Fetch the events when the App component mounts
   }, [currentCity, currentNOE]); // Add currentCity and currentNOE as dependencies to the useEffect hook so that the events and number of events are fetched whenever a change is made to either of these states
-  
+
   const fetchData = async () => {
-    const allEvents = await getEvents(); // Fetch all events using getEvents function from api.js
-    const filteredEvents = currentCity === 'See all cities' ? 
-      allEvents :
-      allEvents.filter(event => event.location === currentCity)
-    setEvents(filteredEvents.slice(0, currentNOE)); // Set only the first n events, where n is the current number of events (currentNOE)
-    setAllLocations(extractLocations(allEvents)); // Extract locations from all events and update the allLocations state
-  };
+    try {
+      const allEvents = (await getEvents()) || []; // Ensure allEvents is at least an empty array
+      const filteredEvents = currentCity === 'See all cities' 
+        ? allEvents 
+        : allEvents.filter(event => event.location && event.location === currentCity);
+      setEvents(filteredEvents.slice(0, currentNOE)); // Only set the number of events as per currentNOE
+      setAllLocations(extractLocations(allEvents)); // Extract locations from all events and update allLocations
+    } catch (error) {
+      setErrorMessage('An error occurred while fetching events.');
+    }
+  };  
+
   return (
     <div className="App">
       <CitySearch allLocations={allLocations} setCurrentCity={setCurrentCity} />
