@@ -1,4 +1,4 @@
-// src/__tests__CitySearch.test.js
+// src/__tests__/CitySearch.test.js
 
 import { render, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -11,7 +11,11 @@ describe('<CitySearch /> component', () => {
     let CitySearchComponent;
 
     beforeEach(() => {
-        CitySearchComponent = render(<CitySearch allLocations={[]}/>);
+        CitySearchComponent = render(<CitySearch 
+            allLocations={[]} 
+            setCurrentCity={() => { }} 
+            setInfoAlert={() => { }}
+        />);
     });
 
     test('renders text input', () => {
@@ -38,7 +42,10 @@ describe('<CitySearch /> component', () => {
         const user = userEvent.setup();
         const allEvents = await getEvents();
         const allLocations = extractLocations(allEvents);
-        CitySearchComponent.rerender(<CitySearch allLocations={allLocations} />);
+        CitySearchComponent.rerender(<CitySearch 
+            allLocations={allLocations} 
+            setInfoAlert={() => { }}
+        />);
 
         // user types "Berlin" in city textbox
         const cityTextBox = CitySearchComponent.queryByRole('textbox');
@@ -64,13 +71,14 @@ describe('<CitySearch /> component', () => {
         CitySearchComponent.rerender(<CitySearch 
             allLocations={allLocations}
             setCurrentCity={() => { }} 
+            setInfoAlert={() => { }}
         />);
 
         const cityTextBox = CitySearchComponent.queryByRole('textbox');
         await user.type(cityTextBox, "Berlin");
 
         // in the suggestion text box, "Berlin, Germany" is typed
-        const BerlinGermanySuggestion = CitySearchComponent.queryAllByRole('listitem') [0];
+        const BerlinGermanySuggestion = CitySearchComponent.queryAllByRole('listitem')[0];
 
         await user.click(BerlinGermanySuggestion);
 
