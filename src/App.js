@@ -43,10 +43,12 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Meet App</h1>
+      <p>Find events in nearby cities</p>
       <div className="alerts-container">
-        {infoAlert && <InfoAlert text={infoAlert} />}
-        {errorAlert && <ErrorAlert text={errorAlert} />}
-        {warningAlert && <WarningAlert text={warningAlert} />}
+        {infoAlert.length ? <InfoAlert text={infoAlert}/> : null}
+        {errorAlert.length ? <ErrorAlert text={errorAlert}/> : null}
+        {warningAlert.length ? <WarningAlert text={warningAlert}/> : null}
       </div>
       <CitySearch 
         allLocations={allLocations}
