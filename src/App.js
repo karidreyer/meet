@@ -8,6 +8,7 @@ import { extractLocations, getEvents } from './api';
 import { InfoAlert, ErrorAlert, WarningAlert } from './components/Alert';
 
 import './App.css';
+import CityEventsChart from './components/CityEventsChart';
 
 function App() {
   const [events, setEvents] = useState([]); // State for storing fetched events, initialized as an empty array
@@ -58,6 +59,7 @@ function App() {
         currentNOE={currentNOE} 
         setCurrentNOE={setCurrentNOE} 
         setErrorAlert={setErrorAlert}/>
+      <CityEventsChart allLocations={allLocations} events={events} />
       <EventList events={events} />
     </div>
   );
